@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* 
+font-family: 'Montserrat', sans-serif;
+font-family: 'Poppins', sans-serif;
+font-family: 'Roboto', sans-serif;
+
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+nav svg {
+  width: 35px;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid #eee;
+}
+
+.logo-container,
+.search-container,
+.user-container {
+  display: flex;
+  align-items: center;
+}
+
+.add-guests {
+  display: flex;
+  align-items: center;
+  /* gap: 0.5rem; */
+}
+
+.lang svg {
+  width: 20px;
+}
+
+.logo-container {
+  gap: 0.5rem;
+  padding: 0;
+  color: #ff385c;
+}
+.logo-container h1 {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+.logo-container svg {
+  rotate: -90deg;
+}
+
+.search-container {
+  border: 1px solid #e1e1e1;
+  padding: 5px 5px 5px 10px;
+  border-radius: 40px;
+  justify-content: space-between;
+  width: fit-content;
+  font-size: 0.9rem;
+}
+.search-container svg {
+  fill: #ff385c;
+}
+.anywhere,
+.any-week,
+.add-guests {
+  padding: 0 15px;
+  font-weight: bold;
+}
+.any-week {
+  border-left: 1px solid #e1e1e1;
+  border-right: 1px solid #e1e1e1;
+}
+
+.user-container {
+  gap: 1rem;
+}
+.lang,
+.user-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.user-menu {
+  border: 1px solid #e1e1e1;
+  border-radius: 40px;
+  padding: 5px 5px 5px 10px;
+
+  gap: 0.5rem;
+}
+
+.menu-icon {
+  width: 20px;
+  color: #585858;
+}
+.menu-icon,
+.user-icon {
+  fill: #717171;
+}
+.add-home {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
