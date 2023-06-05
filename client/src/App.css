@@ -18,6 +18,11 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 nav svg {
   width: 35px;
 }
@@ -109,4 +114,42 @@ nav {
 .add-home {
   font-size: 0.9rem;
   font-weight: bold;
+}
+
+.form {
+  /* padding: 100px 300px; */
+  max-width: 500px;
+  margin: 150px auto;
+  text-align: center;
+}
+.form h2 {
+  margin-bottom: 12px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form input {
+  margin-bottom: 8px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+form input:focus {
+  outline: 1px solid #bbb;
+}
+
+form button {
+  border: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  background-color: #ff385c;
+  color: #fff;
+  margin-bottom: 10px;
+}
+form p a {
+  font-weight: bold;
+  text-decoration: underline;
 }
