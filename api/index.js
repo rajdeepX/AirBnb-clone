@@ -6,6 +6,9 @@ require('dotenv').config()
 const app = express();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const jwt = require("jsonwebtoken")
+
+const jwtSecret = "asldfkjlkj53kjlldsfk6kljjk"
 
 app.use(express.json())
 
@@ -50,10 +53,13 @@ app.post("/login", async (req, res) => {
 
             console.log(result)
             if (err) {
-                res.status(400).json(err)
+                console.log(err);
             }
             if (result === true) {
-                res.json("user found")
+                jwt.sign({ email: userFound.email, id: userFound._id }, jwtSecret, {}, (err, token) => {
+                    if (err) throw err
+                    res.cookie("token", token).json(userFound)
+                })
             } else {
                 res.status(401).json("Wrong credentials")
             }
