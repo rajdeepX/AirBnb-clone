@@ -16,7 +16,7 @@ const LoginPage = () => {
         email,
         password,
       });
-      console.log(response);
+      // console.log(response);
       setRedirect(true);
       setUserInfo(response);
     } catch (error) {

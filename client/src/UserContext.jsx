@@ -4,13 +4,15 @@ import { createContext, useEffect, useState } from "react";
 const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
-  const [userInfo, setUserInfo] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
+  const [ready, setReady] = useState(false);
 
   const fetchUser = async () => {
     if (!userInfo) {
-      const { data } = await axios.get("/profile");
+      const data = await axios.get("/profile");
       console.log(data);
       setUserInfo(data);
+      setReady(true);
     }
   };
 
@@ -19,7 +21,7 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userInfo, setUserInfo }}>
+    <UserContext.Provider value={{ userInfo, setUserInfo, ready }}>
       {children}
     </UserContext.Provider>
   );
