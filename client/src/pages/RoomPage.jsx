@@ -1,21 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "./RoomPage.css";
+import { Navigate } from "react-router-dom";
 const RoomPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
-  // console.log(checkIn);
-  // console.log(checkOut);
+  const date = new Date();
+  const formatDate = date.toISOString().split("T", 1)[0];
+
+  const [minDate, setMinDate] = useState(formatDate);
 
   const checkInDate = new Date(checkIn);
-  console.log(checkInDate);
 
   const checkOutDate = new Date(checkOut);
-  console.log(checkOutDate);
 
   const dateDiff = checkOutDate.getDate() - checkInDate.getDate();
-  console.log(dateDiff);
+
+  const handleReserve = () => {
+    setRedirect(true);
+  };
+
+  if (redirect) {
+    return <Navigate to={"/account/bookings"} />;
+  }
 
   return (
     <div>
@@ -233,28 +242,32 @@ const RoomPage = () => {
             </div>
             <div className="book-room">
               <div className="date">
-                <div className="check-in">
-                  <input
-                    type="date"
-                    name="checkInDate"
-                    onChange={(e) => setCheckIn(e.target.value)}
-                  />
-                </div>
-                <div className="check-out">
-                  <input
-                    type="date"
-                    name="checkOutDate"
-                    onChange={(e) => setCheckOut(e.target.value)}
-                  />
-                </div>
+                <input
+                  type="date"
+                  name="checkInDate"
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={minDate}
+                />
+
+                <input
+                  type="date"
+                  name="checkOutDate"
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn}
+                />
               </div>
               <div className="guests">
                 <p>No. of guests</p>
                 <input type="number" max="2" min="1" defaultValue="1" />
               </div>
-              <button>Reserve</button>
+              <button
+                disabled={dateDiff === 0 || isNaN(dateDiff)}
+                onClick={handleReserve}
+              >
+                Reserve
+              </button>
               <div className="per-night">
-                <p>Rs. 7890 x {dateDiff} night</p>
+                <p>Rs. 7890 &times; {dateDiff} night</p>
                 <p>Rs. {7890 * dateDiff}</p>
               </div>
               <div className="service-fee">

@@ -178,6 +178,8 @@ font-family: 'Roboto', sans-serif;
   padding: 5px 15px;
   border-radius: 5px;
   border: 1px solid #717171;
+  font-family: inherit;
+  font-size: 0.8rem;
 }
 
 .guests {
@@ -200,6 +202,10 @@ font-family: 'Roboto', sans-serif;
   border-radius: 10px;
   border: none;
   margin-bottom: 20px;
+}
+
+.book-room button:disabled {
+  background-color: #afafaf;
 }
 
 .per-night,
