@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
 import UserContext from "../UserContext";
 import Navbar from "../components/Navbar";
-import { Link, NavLink, Navigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import "./AccountPage.css";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const AccountPage = () => {
   const { subpage } = useParams();
@@ -29,12 +27,13 @@ const AccountPage = () => {
           <NavLink to={"/account/bookings"} activeclassname="active">
             <p>My Bookings</p>
           </NavLink>
-          <NavLink to={"/account/accommodations"} activeclassname="active">
-            <p>My Accommodations</p>
+          <NavLink to={"/account/saved"} activeclassname="active">
+            <p>My Saved Rooms</p>
           </NavLink>
         </nav>
+
+        <Outlet />
       </div>
-      <FontAwesomeIcon icon={faPaperPlane} />
     </>
   );
 };

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Navbar from "../components/Navbar";
 import UserContext from "../UserContext";
 import Card from "../components/Card";
+import FilterRoom from "../components/FilterRoom";
 
 const HomePage = () => {
   const { userInfo } = useContext(UserContext);
@@ -10,15 +11,8 @@ const HomePage = () => {
   return (
     <>
       <Navbar />
-      <h1>Home page</h1>
+      <FilterRoom />
       <div className="card-container">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
         <Card />
       </div>
     </>

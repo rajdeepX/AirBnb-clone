@@ -1,6 +1,6 @@
 .account-container {
   width: 100vw;
-  padding: 0 110px;
+  padding: 0 200px;
 }
 
 .account-nav {
@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   gap: 2rem;
+  margin-bottom: 40px;
 }
 
 .active {

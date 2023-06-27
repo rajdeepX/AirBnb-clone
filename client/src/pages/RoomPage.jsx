@@ -1,11 +1,53 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import { Link, Navigate, useParams } from "react-router-dom";
+import UserContext from "../UserContext";
+import differenceInCalendarDays from "date-fns/differenceInCalendarDays/index";
+import { PiMedalFill } from "react-icons/pi";
 import "./RoomPage.css";
-import { Navigate } from "react-router-dom";
+
 const RoomPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [redirect, setRedirect] = useState(false);
+
+  const { rooms, setBookedRoom, bookedRoom, setSavedRooms, savedRooms } =
+    useContext(UserContext);
+
+  const { slug } = useParams();
+  console.log(slug);
+
+  const getRoom = (slug) => {
+    let tempRooms = [...rooms];
+    const room = tempRooms.find((room) => {
+      return room.slug === slug;
+    });
+    return room;
+  };
+
+  console.log();
+
+  const roomList = getRoom(slug);
+
+  console.log(roomList);
+
+  if (!roomList) {
+    return (
+      <div className="error">
+        <h3>No such room could be found...</h3>
+        <Link to={"/"} className="btn-primary">
+          Back to home
+        </Link>
+      </div>
+    );
+  }
+
+  const { rating, address, images, description, extras, price, id, superhost } =
+    roomList;
+
+  const [mainImg, ...restImg] = images;
+
+  // for calender date
 
   const date = new Date();
   const formatDate = date.toISOString().split("T", 1)[0];
@@ -15,11 +57,27 @@ const RoomPage = () => {
   const checkInDate = new Date(checkIn);
 
   const checkOutDate = new Date(checkOut);
-
-  const dateDiff = checkOutDate.getDate() - checkInDate.getDate();
+  let numberOfDays = 0;
+  if (checkInDate && checkOutDate) {
+    numberOfDays = differenceInCalendarDays(checkOutDate, checkInDate);
+  }
 
   const handleReserve = () => {
+    let room = [...rooms];
+    room = room.find((item) => item.id === id);
+
+    if (room) {
+      room.date = checkIn;
+      setBookedRoom([...bookedRoom, room]);
+    }
+
     setRedirect(true);
+  };
+
+  const handleSave = () => {
+    let room = [...rooms];
+    room = room.find((item) => item.id === id);
+    setSavedRooms([...savedRooms, room]);
   };
 
   if (redirect) {
@@ -47,8 +105,17 @@ const RoomPage = () => {
                 />
               </svg>
               <p>
-                4.5 <hr className="dot" /> <a>5 reviews</a>{" "}
-                <hr className="dot" /> <a>Milano, Lombardia, Italy</a>
+                {rating} <hr className="dot" /> <a>5 reviews</a>{" "}
+                <hr className="dot" />
+                {superhost ? (
+                  <div className="superhost-room">
+                    <PiMedalFill /> <span>Superhost</span>
+                  </div>
+                ) : (
+                  ""
+                )}
+                <hr className="dot" />
+                <a>{address}</a>
               </p>
             </div>
             <div className="social-tab">
@@ -69,159 +136,70 @@ const RoomPage = () => {
                 </svg>
                 <a>Share</a>
               </div>
-              <div className="save">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                  />
-                </svg>
-                <a>Save</a>
-              </div>
+              <Link onClick={handleSave}>
+                <div className="save">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    />
+                  </svg>
+                  <a>Save</a>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="img-ctn">
-          <img
-            className="lg-col-2 lg-row-2"
-            src="../../images/room-1.png"
-            alt="room"
-          />
-          <img className="img2" src="../../images/room-2.webp" alt="room" />
-          <img className="img3" src="../../images/room-3.webp" alt="room" />
-          <img className="img4" src="../../images/room-4.webp" alt="room" />
-          <img className="img5" src="../../images/room-5.webp" alt="room" />
+          <img className="lg-col-2 lg-row-2" src={mainImg} alt="room" />
+          {restImg.map((img, index) => {
+            return <img className="img2" src={img} key={index} />;
+          })}
         </div>
 
         <div className="room-info">
           <div className="about-room">
             <h3>About this place</h3>
-            <p>
-              Enjoy an elegant private room of 20 m2 in a renovated apartment of
-              160 m2 in the heart of the city center of Nantes in the Graslin
-              district. <br /> The charm of the old renovated: ceiling height of
-              3.60 m, period parquet, black marble fireplace, comfortable
-              bathroom.
-            </p>
+            <p>{description}</p>
             <hr />
             <h3>What this place offers</h3>
             <div className="features">
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 feature-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-                Lock on bedroom door
-              </p>
+              {extras.map((item, index) => {
+                return (
+                  <p key={index}>
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      className="feature-icon"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      ></path>
+                    </svg>
+                    {item}
+                  </p>
+                );
+              })}
             </div>
           </div>
           <div className="room-price">
             <div className="price-rating">
-              <p className="price">Rs. 7890 night</p>
+              <p className="price">Rs. {price} night</p>
               <div className="rating-review">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +214,7 @@ const RoomPage = () => {
                   />
                 </svg>
                 <p className="room-rating">
-                  4.95 <hr className="price-dot" /> 22 reviews
+                  {rating} <hr className="price-dot" /> 22 reviews
                 </p>
               </div>
             </div>
@@ -260,25 +238,34 @@ const RoomPage = () => {
                 <p>No. of guests</p>
                 <input type="number" max="2" min="1" defaultValue="1" />
               </div>
+              {numberOfDays > 0 && !isNaN(numberOfDays) ? (
+                <div>
+                  <div className="per-night">
+                    <p>
+                      Rs. {price} &times; {numberOfDays}{" "}
+                      {numberOfDays > 1 ? "nights" : "night"}
+                    </p>
+                    <p>Rs. {price * numberOfDays}</p>
+                  </div>
+                  <div className="service-fee">
+                    <p>BookInn service fee</p>
+                    <p>Rs. 900</p>
+                  </div>
+                  <hr />
+                  <div className="total">
+                    <p>Total before taxes</p>
+                    <p>Rs. {price * numberOfDays + 900}</p>
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <button
-                disabled={dateDiff === 0 || isNaN(dateDiff)}
+                disabled={numberOfDays <= 0 || isNaN(numberOfDays)}
                 onClick={handleReserve}
               >
                 Reserve
               </button>
-              <div className="per-night">
-                <p>Rs. 7890 &times; {dateDiff} night</p>
-                <p>Rs. {7890 * dateDiff}</p>
-              </div>
-              <div className="service-fee">
-                <p>BookInn service fee</p>
-                <p>Rs. 900</p>
-              </div>
-              <hr />
-              <div className="total">
-                <p>Total before taxes</p>
-                <p>Rs. {7890 * dateDiff + 900}</p>
-              </div>
             </div>
           </div>
         </div>
